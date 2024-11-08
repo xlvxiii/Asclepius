@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="news">News</string>
+    <string name="predict">Predict</string>
+    <string name="history">History</string>
+</resources>

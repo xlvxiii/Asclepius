@@ -6,37 +6,34 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.dicoding.asclepius.R
 import com.dicoding.asclepius.databinding.ActivityMainBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
-    private var currentImageUri: Uri? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-    }
 
-    private fun startGallery() {
-        // TODO: Mendapatkan gambar dari Gallery.
-    }
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-    private fun showImage() {
-        // TODO: Menampilkan gambar sesuai Gallery yang dipilih.
-    }
+        val navView: BottomNavigationView = binding.navView
 
-    private fun analyzeImage() {
-        // TODO: Menganalisa gambar yang berhasil ditampilkan.
-    }
+        val navController = findNavController(R.id.nav_host_fragment_activity_main)
 
-    private fun moveToResult() {
-        val intent = Intent(this, ResultActivity::class.java)
-        startActivity(intent)
-    }
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.navigation_news, R.id.navigation_predict, R.id.navigation_history
+            )
+        )
 
-    private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        navView.setupWithNavController(navController)
     }
 }

@@ -15,6 +15,7 @@
             android:id="@+id/result_image"
             android:layout_width="match_parent"
             android:layout_height="400dp"
+            android:importantForAccessibility="no"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/ic_place_holder"/>
 
@@ -23,6 +24,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:text="@string/result" />
+            tools:text="Hasil Analisis"/>
     </LinearLayout>
 </ScrollView>

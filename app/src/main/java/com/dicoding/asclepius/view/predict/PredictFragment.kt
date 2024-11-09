@@ -92,7 +92,7 @@ class PredictFragment : Fragment() {
             if (e is NullPointerException) {
                 showToast("Choose an image first")
             } else {
-                showToast("Error classifying image")
+                showToast("Failed to classifying image: ${e.message}")
             }
         }
     }

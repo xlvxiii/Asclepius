@@ -15,12 +15,26 @@
         android:id="@+id/navigation_predict"
         android:name="com.dicoding.asclepius.view.predict.PredictFragment"
         android:label="@string/predict"
-        tools:layout="@layout/fragment_predict" />
+        tools:layout="@layout/fragment_predict" >
+        <action
+            android:id="@+id/action_navigation_predict_to_result_activity"
+            app:destination="@id/result_activity" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_history"
         android:name="com.dicoding.asclepius.view.history.HistoryFragment"
         android:label="@string/history"
         tools:layout="@layout/fragment_history" />
+
+    <activity
+        android:id="@+id/result_activity"
+        android:name="com.dicoding.asclepius.view.ResultActivity"
+        android:label="@string/result"
+        tools:layout="@layout/activity_result" >
+        <argument
+            android:name="prediction_result"
+            app:argType="com.dicoding.asclepius.data.safeargs.PredictionResult" />
+    </activity>
 
 </navigation>

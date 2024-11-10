@@ -1,31 +1,86 @@
 package com.dicoding.asclepius.view.news
 
+import android.content.Intent
+import android.net.Uri
 import androidx.fragment.app.viewModels
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.asclepius.R
+import com.dicoding.asclepius.data.repositories.Result
+import com.dicoding.asclepius.data.response.ArticlesItem
+import com.dicoding.asclepius.databinding.FragmentNewsBinding
 
 class NewsFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = NewsFragment()
-    }
+    private var _binding: FragmentNewsBinding? = null
+    private val binding get() = _binding
 
-    private val viewModel: NewsViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        // TODO: Use the ViewModel
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View {
-        return inflater.inflate(R.layout.fragment_news, container, false)
+    ): View? {
+        _binding = FragmentNewsBinding.inflate(inflater, container, false)
+
+        return binding?.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity())
+        val viewModel: NewsViewModel by viewModels {
+            factory
+        }
+
+        binding?.rvNews?.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
+
+        viewModel.searchNews("cancer", "health").observe(viewLifecycleOwner) { newsList ->
+            if (newsList != null) {
+                when(newsList) {
+                    is Result.Loading -> {}
+                    is Result.Success -> {
+                        setNewsData(newsList.data)
+                    }
+                    is Result.Error -> {
+                        Log.e("NewsFragment", "Error: ${newsList.error}")
+                        Toast.makeText(requireActivity(), "Failed to load news: ${newsList.error}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun setNewsData(newsList: List<ArticlesItem?>?) {
+        val adapter = NewsAdapter {
+            if (it.url != null) {
+                redirectToArticle(it.url)
+            }
+        }
+        adapter.submitList(newsList)
+        binding?.rvNews?.adapter = adapter
+
+//        adapter.setOnItemClickCallback(object : NewsAdapter.OnItemClickCallback {
+//            override fun onItemClicked(data: ArticlesItem) {
+//                redirectToArticle(data)
+//            }
+//        })
+    }
+
+    private fun redirectToArticle(url: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        startActivity(intent)
     }
 }

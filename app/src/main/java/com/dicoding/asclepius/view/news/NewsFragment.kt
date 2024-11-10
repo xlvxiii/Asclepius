@@ -45,13 +45,19 @@ class NewsFragment : Fragment() {
         viewModel.searchNews("cancer", "health").observe(viewLifecycleOwner) { newsList ->
             if (newsList != null) {
                 when(newsList) {
-                    is Result.Loading -> {}
+                    is Result.Loading -> {
+                        binding?.shimmerLayout?.startShimmer()
+                    }
                     is Result.Success -> {
                         setNewsData(newsList.data)
                     }
                     is Result.Error -> {
+                        binding?.shimmerLayout?.apply {
+                            stopShimmer()
+                            visibility = View.GONE
+                        }
                         Log.e("NewsFragment", "Error: ${newsList.error}")
-                        Toast.makeText(requireActivity(), "Failed to load news: ${newsList.error}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireActivity(), "Failed to load data: ${newsList.error}", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -69,8 +75,14 @@ class NewsFragment : Fragment() {
                 redirectToArticle(it.url)
             }
         }
+
         adapter.submitList(newsList)
         binding?.rvNews?.adapter = adapter
+
+        binding?.shimmerLayout?.apply {
+            stopShimmer()
+            visibility = View.GONE
+        }
 
 //        adapter.setOnItemClickCallback(object : NewsAdapter.OnItemClickCallback {
 //            override fun onItemClicked(data: ArticlesItem) {

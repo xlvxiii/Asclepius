@@ -22,9 +22,11 @@ class NewsAdapter(private val onClickReadButton: (ArticlesItem) -> Unit) : ListA
                     RequestOptions.placeholderOf(R.drawable.baseline_broken_image_24)
                         .error(R.drawable.baseline_broken_image_24))
                 .into(binding.thumbnail)
-            binding.title.text = news.title
-            binding.source.text = "Source: ${news.source?.name}"
-            binding.description.text = news.description
+            binding.apply {
+                title.text = news.title
+                source.text = "Source: ${news.source?.name}"
+                description.text = news.description
+            }
         }
     }
 

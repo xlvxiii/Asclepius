@@ -1,5 +1,6 @@
 package com.dicoding.asclepius.view.predict
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -14,8 +15,10 @@ import androidx.navigation.fragment.findNavController
 import com.dicoding.asclepius.data.safeargs.PredictionResult
 import com.dicoding.asclepius.databinding.FragmentPredictBinding
 import com.dicoding.asclepius.helper.ImageClassifierHelper
+import com.yalantis.ucrop.UCrop
 import org.tensorflow.lite.support.label.Category
 import org.tensorflow.lite.task.vision.classifier.Classifications
+import java.io.File
 
 class PredictFragment : Fragment() {
 
@@ -41,6 +44,21 @@ class PredictFragment : Fragment() {
         binding.analyzeButton.setOnClickListener { analyzeImage() }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (data != null) {
+            if (requestCode == UCrop.REQUEST_CROP && resultCode == android.app.Activity.RESULT_OK) {
+                val croppedImageUri = UCrop.getOutput(data)
+                currentImageUri = croppedImageUri
+                showImage()
+            } else if (requestCode == UCrop.REQUEST_CROP && resultCode == android.app.Activity.RESULT_CANCELED) {
+                val cropError = UCrop.getError(data)
+                showToast("Crop error: ${cropError?.message}")
+            }
+        }
+    }
+
     private fun startGallery() {
         launcherGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
@@ -49,8 +67,8 @@ class PredictFragment : Fragment() {
         ActivityResultContracts.PickVisualMedia()
     ) { uri: Uri? ->
         if (uri != null) {
-            currentImageUri = uri
-            showImage()
+            startCrop(uri)
+//            showImage()
         } else {
             Log.d("Photo Picker", "No media selected")
         }
@@ -61,6 +79,11 @@ class PredictFragment : Fragment() {
             Log.d("Image URI", "showImage: $it")
             binding.previewImageView.setImageURI(it)
         }
+    }
+
+    private fun startCrop(uri: Uri) {
+        val destinationUri = Uri.fromFile(File.createTempFile("cropped", ".jpg"))
+        UCrop.of(uri, destinationUri).start(requireContext(), this)
     }
 
     private fun analyzeImage() {

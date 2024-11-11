@@ -11,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.dicoding.asclepius.R
 import com.dicoding.asclepius.data.repositories.Result
 import com.dicoding.asclepius.data.response.ArticlesItem
 import com.dicoding.asclepius.databinding.FragmentNewsBinding
@@ -20,8 +19,6 @@ class NewsFragment : Fragment() {
 
     private var _binding: FragmentNewsBinding? = null
     private val binding get() = _binding
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,7 +46,7 @@ class NewsFragment : Fragment() {
                         binding?.shimmerLayout?.startShimmer()
                     }
                     is Result.Success -> {
-                        setNewsData(newsList.data)
+                        setNewsData(newsList.data?.filterNot { it?.title?.contains("[removed]", true) ?: false })
                     }
                     is Result.Error -> {
                         binding?.shimmerLayout?.apply {

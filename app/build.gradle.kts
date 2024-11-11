@@ -6,6 +6,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("androidx.navigation.safeargs")
     id("kotlin-parcelize")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -83,4 +84,8 @@ dependencies {
     implementation("com.facebook.shimmer:shimmer:0.5.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("com.github.yalantis:ucrop:2.2.8")
+
+    implementation("androidx.room:room-runtime:2.5.2")
+    implementation("androidx.room:room-ktx:2.5.2")
+    ksp("androidx.room:room-compiler:2.5.2")
 }

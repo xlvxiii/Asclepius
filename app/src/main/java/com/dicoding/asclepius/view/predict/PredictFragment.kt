@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.dicoding.asclepius.data.safeargs.PredictionResult
 import com.dicoding.asclepius.databinding.FragmentPredictBinding
@@ -40,6 +41,7 @@ class PredictFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding.galleryButton.setOnClickListener { startGallery() }
         binding.analyzeButton.setOnClickListener { analyzeImage() }
     }
@@ -99,6 +101,11 @@ class PredictFragment : Fragment() {
                         results?.let {
                             if (it.isNotEmpty() && it[0].categories.isNotEmpty()) {
                                 val result = it[0].categories[0]
+
+                                val factory = ViewModelFactory.getInstance(requireContext())
+                                val viewModel: PredictViewModel by viewModels { factory }
+
+                                viewModel.savePredictionResult(result.label, result.score, currentImageUri.toString())
                                 moveToResult(result)
                             }
                         }

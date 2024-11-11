@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.dicoding.asclepius.data.safeargs.PredictionResult
 import com.dicoding.asclepius.databinding.FragmentPredictBinding
@@ -29,6 +30,11 @@ class PredictFragment : Fragment() {
     private var currentImageUri: Uri? = null
     private lateinit var imageClassifierHelper: ImageClassifierHelper
 
+    private val viewModel: PredictViewModel by lazy {
+        val factory = ViewModelFactory.getInstance(requireContext())
+        ViewModelProvider(this, factory)[PredictViewModel::class.java]
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -42,6 +48,11 @@ class PredictFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.currentImageUri?.let { uri ->
+            currentImageUri = uri
+            showImage(currentImageUri)
+        }
+
         binding.galleryButton.setOnClickListener { startGallery() }
         binding.analyzeButton.setOnClickListener { analyzeImage() }
     }
@@ -53,7 +64,8 @@ class PredictFragment : Fragment() {
             if (requestCode == UCrop.REQUEST_CROP && resultCode == android.app.Activity.RESULT_OK) {
                 val croppedImageUri = UCrop.getOutput(data)
                 currentImageUri = croppedImageUri
-                showImage()
+                viewModel.currentImageUri = currentImageUri
+                showImage(currentImageUri)
             } else if (requestCode == UCrop.REQUEST_CROP && resultCode == android.app.Activity.RESULT_CANCELED) {
                 val cropError = UCrop.getError(data)
                 showToast("Crop error: ${cropError?.message}")
@@ -70,14 +82,14 @@ class PredictFragment : Fragment() {
     ) { uri: Uri? ->
         if (uri != null) {
             startCrop(uri)
-//            showImage()
+//            viewModel.
         } else {
             Log.d("Photo Picker", "No media selected")
         }
     }
 
-    private fun showImage() {
-        currentImageUri?.let {
+    private fun showImage(uri: Uri?) {
+        uri?.let {
             Log.d("Image URI", "showImage: $it")
             binding.previewImageView.setImageURI(it)
         }
@@ -101,9 +113,6 @@ class PredictFragment : Fragment() {
                         results?.let {
                             if (it.isNotEmpty() && it[0].categories.isNotEmpty()) {
                                 val result = it[0].categories[0]
-
-                                val factory = ViewModelFactory.getInstance(requireContext())
-                                val viewModel: PredictViewModel by viewModels { factory }
 
                                 viewModel.savePredictionResult(result.label, result.score, currentImageUri.toString())
                                 moveToResult(result)

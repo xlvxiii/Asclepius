@@ -80,12 +80,6 @@ class NewsFragment : Fragment() {
             stopShimmer()
             visibility = View.GONE
         }
-
-//        adapter.setOnItemClickCallback(object : NewsAdapter.OnItemClickCallback {
-//            override fun onItemClicked(data: ArticlesItem) {
-//                redirectToArticle(data)
-//            }
-//        })
     }
 
     private fun redirectToArticle(url: String) {

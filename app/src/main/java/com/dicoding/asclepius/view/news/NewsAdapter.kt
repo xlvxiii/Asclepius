@@ -1,5 +1,6 @@
 package com.dicoding.asclepius.view.news
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -16,6 +17,7 @@ class NewsAdapter(private val onClickReadButton: (ArticlesItem) -> Unit) : ListA
 //    private lateinit var onItemClickCallback: OnItemClickCallback
 
     class ArticleViewHolder(val binding: ItemNewsBinding) : RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("SetTextI18n")
         fun bind(news: ArticlesItem) {
             Glide.with(binding.root.context).load(news.urlToImage)
                 .apply(

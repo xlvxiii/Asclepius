@@ -15,6 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="160dp"
             android:id="@+id/thumbnail"
+            android:importantForAccessibility="no"
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

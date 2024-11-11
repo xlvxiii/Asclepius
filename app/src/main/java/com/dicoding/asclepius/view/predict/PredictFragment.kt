@@ -96,7 +96,7 @@ class PredictFragment : Fragment() {
                     requireActivity().runOnUiThread { showToast(error) }
                 }
 
-                override fun onResults(results: List<Classifications>?, inferenceTime: Long) {
+                override fun onResults(results: List<Classifications>?) {
                     requireActivity().runOnUiThread {
                         results?.let {
                             if (it.isNotEmpty() && it[0].categories.isNotEmpty()) {

@@ -32,7 +32,7 @@ class NewsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val factory: ViewModelFactory = ViewModelFactory.getInstance(requireActivity())
+        val factory: ViewModelFactory = ViewModelFactory.getInstance()
         val viewModel: NewsViewModel by viewModels {
             factory
         }

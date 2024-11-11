@@ -1,6 +1,5 @@
 package com.dicoding.asclepius.view.news
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.dicoding.asclepius.data.repositories.NewsRepository
@@ -20,7 +19,7 @@ ViewModelProvider.NewInstanceFactory() {
     companion object {
         @Volatile
         private var instance: ViewModelFactory? = null
-        fun getInstance(context: Context): ViewModelFactory =
+        fun getInstance(): ViewModelFactory =
             instance ?: synchronized(this) {
                 instance ?: ViewModelFactory(Injection.provideRepository())
             }.also { instance = it }

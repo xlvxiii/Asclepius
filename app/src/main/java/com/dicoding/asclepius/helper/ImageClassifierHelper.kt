@@ -36,8 +36,7 @@ class ImageClassifierHelper(
     interface ClassifierListener {
         fun onError(error: String)
         fun onResults(
-            results: List<Classifications>?,
-            inferenceTime: Long
+            results: List<Classifications>?
         )
     }
 
@@ -83,7 +82,7 @@ class ImageClassifierHelper(
             val results = imageClassifier?.classify(tensorImage)
 
             inferenceTime = SystemClock.uptimeMillis() - inferenceTime
-            listener?.onResults(results, inferenceTime)
+            listener?.onResults(results)
         }
     }
 

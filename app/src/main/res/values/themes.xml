@@ -5,5 +5,8 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.Asclepius" parent="Base.Theme.Asclepius" />
+    <style name="Theme.Asclepius" parent="Base.Theme.Asclepius">
+        <item name="colorPrimary">#798645</item>
+        <item name="colorSecondaryContainer">#CBD2A4</item>
+    </style>
 </resources>

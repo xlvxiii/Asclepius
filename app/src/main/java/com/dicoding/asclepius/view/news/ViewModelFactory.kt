@@ -22,7 +22,7 @@ ViewModelProvider.NewInstanceFactory() {
         private var instance: ViewModelFactory? = null
         fun getInstance(context: Context): ViewModelFactory =
             instance ?: synchronized(this) {
-                instance ?: ViewModelFactory(Injection.provideRepository(context))
+                instance ?: ViewModelFactory(Injection.provideRepository())
             }.also { instance = it }
     }
 }
